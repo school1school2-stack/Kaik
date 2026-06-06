@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة ومزامنة طلبات الكيك الفاخر</title>
+    <!-- خطوط جوجل وفونت أوسم للأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
+            /* هوية لونية نسائية فاخرة وناعمة (وردي بودري، كريمي، وذهبي روز) */
             --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fef0f3 50%, #f7e7eb 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
             --card-border: rgba(234, 182, 192, 0.4);
@@ -82,6 +84,7 @@
             font-weight: 600;
         }
 
+        /* شريط البحث السحابي */
         .search-section {
             background: rgba(247, 231, 235, 0.4);
             border: 1px solid rgba(229, 169, 180, 0.3);
@@ -262,6 +265,7 @@
             border-color: transparent;
         }
 
+        /* نافذة المودال المنبثقة الفاتحة */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -292,6 +296,7 @@
         .modal-body { font-size: 15px; color: var(--text-dark); line-height: 1.8; white-space: pre-line; max-height: 350px; overflow-y: auto; font-weight: 600; }
         .modal-close-btn { background: var(--btn-gold); border: none; color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
 
+        /* تفاصيل الفاتورة */
         .invoice-bill-box {
             background: #fff;
             border: 1px solid rgba(229, 169, 180, 0.4);
@@ -327,21 +332,15 @@
 
         .price-val span { font-size: 13px; margin-right: 3px; font-weight: 600; }
 
-        /* تعديل توزيع لوحة التحكم في الأزرار السفلية لتكون متناسقة */
+        /* أزرار التحكم والخيارات */
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 20px;
         }
 
-        .btn-full-width {
-            grid-column: span 2;
-        }
-
-        @media (max-width: 550px) {
+        @media (max-width: 500px) {
             .actions-grid { grid-template-columns: 1fr; }
-            .btn-full-width { grid-column: span 1; }
         }
 
         .btn-action {
@@ -361,7 +360,12 @@
 
         .btn-save-cloud { background: linear-gradient(135deg, #6b8eff 0%, #4869d6 100%); }
         .btn-share-link { background: var(--btn-gold); }
-        .btn-open-shortener { background: linear-gradient(135deg, #2a8f79 0%, #44b9a1 100%); }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 169, 180, 0.3);
+            filter: brightness(1.05);
+        }
 
         #status-msg {
             text-align: center; margin-top: 15px; font-weight: 700; font-size: 14px; opacity: 0; transition: opacity 0.3s;
@@ -381,6 +385,7 @@
             <p id="pageSubtitle">نظام إدارة ومزامنة الطلبات السحابية</p>
         </header>
 
+        <!-- لوحة البحث السحابي -->
         <div class="search-section admin-only">
             <div class="section-title" style="margin-top: 0; border-bottom-color: rgba(229, 169, 180, 0.2);"><i class="fa-solid fa-cloud-magnifying-glass"></i> البحث السحابي واسترجاع الفواتير</div>
             <div class="search-box">
@@ -390,6 +395,7 @@
             <div class="search-results" id="searchResultsBox"></div>
         </div>
 
+        <!-- بيانات العميل والوقت -->
         <div class="section-title"><i class="fa-solid fa-user-tag"></i> بيانات العميل والوقت</div>
         <div class="grid-2">
             <div class="input-group">
@@ -425,6 +431,7 @@
             </div>
         </div>
 
+        <!-- آلية التسليم -->
         <div class="section-title"><i class="fa-solid fa-truck"></i> آلية التسليم</div>
         <div class="input-group">
             <label>نوع التسليم</label>
@@ -437,6 +444,7 @@
             </div>
         </div>
 
+        <!-- حقول التوصيل -->
         <div id="delivery-fields">
             <div class="grid-2">
                 <div class="input-group">
@@ -463,6 +471,7 @@
             </div>
         </div>
 
+        <!-- مواصفات الكيك -->
         <div class="section-title"><i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك</div>
         
         <div class="input-group">
@@ -481,6 +490,7 @@
             </div>
         </div>
 
+        <!-- زر العرض المريح للعميل ولصاحبة المتجر -->
         <div class="input-group">
             <label id="btnLabel">مواصفات الفاتورة الفنية</label>
             <button class="btn-view-details" onclick="openDetailsModal()">
@@ -513,6 +523,7 @@
             </div>
         </div>
 
+        <!-- حسابات الفاتورة الرسمية الناعمة -->
         <div class="invoice-bill-box">
             <div class="bill-row">
                 <span>سعر الطلب (الكيك الأساسي):</span>
@@ -532,21 +543,20 @@
             </div>
         </div>
 
+        <!-- خيارات التحكم والمزامنة -->
         <div class="actions-grid admin-only">
             <button class="btn-action btn-save-cloud" onclick="saveOrderToCloud()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ومزامنة السحابة ☁️
             </button>
-            <button class="btn-action btn-share-link" onclick="generateLongInvoiceLink()">
-                <i class="fa-solid fa-share-nodes"></i> توليد رابط العميل الطويل 🔗
-            </button>
-            <button class="btn-action btn-open-shortener btn-full-width" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة اختصار الروابط المستقلة (N) 🌐
+            <button class="btn-action btn-share-link" onclick="generateShareableLink()">
+                <i class="fa-solid fa-share-nodes"></i> توليد رابط العميل الذكي
             </button>
         </div>
 
         <div id="status-msg"></div>
     </div>
 
+    <!-- نافذة المودال الفخمة لعرض النص الطويل -->
     <div class="modal-overlay" id="detailsModal" onclick="closeDetailsModal()">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="modal-header"><i class="fa-solid fa-birthday-cake"></i> تفاصيل ومواصفات الطلب بالكامل</div>
@@ -555,6 +565,7 @@
         </div>
     </div>
 
+    <!-- محرك السحابة Firebase بالتزامن المباشر -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -575,14 +586,13 @@
         window.saveOrderToCloud = saveOrderToCloud;
         window.searchCloudOrders = searchCloudOrders;
         window.loadSelectedOrder = loadSelectedOrder;
-        window.generateLongInvoiceLink = generateLongInvoiceLink;
 
         async function saveOrderToCloud() {
             const phone = document.getElementById('custPhone').value.trim();
             const name = document.getElementById('custName').value.trim();
 
             if (!phone || !name) {
-                showStatus("⚠️ يرجى كتابة اسم العميل ورقم جواله لحفظ الطلب سحابياً!", "#ef4444");
+                showStatus("⚠️ يرجى كتابة اسم العميل ورقم جواله لحفظ الطلب سحابياً بشكل صحيح!", "#ef4444");
                 return;
             }
 
@@ -676,34 +686,6 @@
             showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "#4869d6");
         }
 
-        function generateLongInvoiceLink() {
-            const data = {
-                name: document.getElementById('custName').value,
-                phone: document.getElementById('custPhone').value,
-                oTime: document.getElementById('orderTime').value,
-                dTime: document.getElementById('deliveryTime').value,
-                delType: document.getElementById('deliveryType').value,
-                delPrice: document.getElementById('deliveryPrice').value,
-                driver: document.getElementById('driverNum').value,
-                driverT: document.getElementById('driverTime').value,
-                cakeP: document.getElementById('cakePrice').value,
-                details: document.getElementById('cakeDetails').value,
-                extDet: document.getElementById('extraDetails').value,
-                extPrice: document.getElementById('extraPrice').value,
-                notes: document.getElementById('notes').value
-            };
-
-            const jsonString = JSON.stringify(data);
-            const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
-            const originalLongUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
-
-            navigator.clipboard.writeText(originalLongUrl).then(() => {
-                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه في الحافظة تلقائياً!\n\nيمكنك الآن الضغط على الزر الأخضر بالأسفل للانتقال لصفحة الاختصار ولصقه هناك.");
-            }).catch(() => {
-                prompt("انسخ الرابط الطويل من هنا:", originalLongUrl);
-            });
-        }
-
         function showStatus(text, color) {
             const msg = document.getElementById('status-msg');
             msg.innerText = text;
@@ -713,6 +695,7 @@
         }
     </script>
 
+    <!-- العمليات التفاعلية الأساسية للفاتورة -->
     <script>
         function toggleDeliveryFields() {
             const type = document.getElementById('deliveryType').value;
@@ -751,6 +734,35 @@
             document.getElementById('detailsModal').classList.remove('active');
         }
 
+        function generateShareableLink() {
+            const data = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                oTime: document.getElementById('orderTime').value,
+                dTime: document.getElementById('deliveryTime').value,
+                delType: document.getElementById('deliveryType').value,
+                delPrice: document.getElementById('deliveryPrice').value,
+                driver: document.getElementById('driverNum').value,
+                driverT: document.getElementById('driverTime').value,
+                cakeP: document.getElementById('cakePrice').value,
+                details: document.getElementById('cakeDetails').value,
+                extDet: document.getElementById('extraDetails').value,
+                extPrice: document.getElementById('extraPrice').value,
+                notes: document.getElementById('notes').value
+            };
+
+            const jsonString = JSON.stringify(data);
+            const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
+            const shareableUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
+
+            navigator.clipboard.writeText(shareableUrl).then(() => {
+                alert("تم توليد الرابط الأنيق للفاتورة ونسخه بنجاح! أرسله للعميل الآن عبر الواتساب.");
+            }).catch(() => {
+                prompt("انسخ الرابط من هنا:", shareableUrl);
+            });
+        }
+
+        // قراءة الروابط وحالة العرض للعميل
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('invoice')) {
@@ -765,4 +777,34 @@
                     document.getElementById('deliveryTime').value = data.dTime || "";
                     document.getElementById('deliveryType').value = data.delType || "pickup";
                     document.getElementById('deliveryPrice').value = data.delPrice || 0;
-                    document.getElementById('driverNum').value
+                    document.getElementById('driverNum').value = data.driver || "";
+                    document.getElementById('driverTime').value = data.driverT || "";
+                    document.getElementById('cakePrice').value = data.cakeP || 0;
+                    document.getElementById('cakeDetails').value = data.details || "";
+                    document.getElementById('extraDetails').value = data.extDet || "";
+                    document.getElementById('extraPrice').value = data.extPrice || 0;
+                    document.getElementById('notes').value = data.notes || "";
+
+                    if(data.delType === 'delivery') {
+                        document.getElementById('delivery-fields').style.display = 'block';
+                    }
+
+                    calculateTotal();
+
+                    document.body.classList.add('view-only');
+                    document.getElementById('pageSubtitle').innerText = "الفاتورة الرقمية الرسمية المعتمدة للطلب";
+                    document.getElementById('btnLabel').innerText = "تفاصيل ومواصفات الكيك المتفق عليها";
+
+                    document.querySelectorAll('input, textarea, select').forEach(el => {
+                        el.readOnly = true;
+                        el.disabled = true;
+                    });
+
+                } catch (e) {
+                    console.error("خطأ فك ترميز الرابط:", e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
