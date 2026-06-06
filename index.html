@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* تعريف متغيرات الثيمات المختلفة */
         :root {
-            /* هوية لونية نسائية فاخرة وناعمة (وردي بودري، كريمي، وذهبي روز) */
+            /* 1. الثيم الافتراضي: الوردي البودري */
             --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fef0f3 50%, #f7e7eb 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
             --card-border: rgba(234, 182, 192, 0.4);
@@ -20,6 +21,63 @@
             --text-muted: #8c7377;
             --input-bg: rgba(255, 255, 255, 0.9);
             --btn-gold: linear-gradient(135deg, #e5a9b4 0%, #d48b98 100%);
+            --title-color: #b36471;
+        }
+
+        /* 2. ثيم الملكي الذهبي والكريمي */
+        [data-theme="royal-gold"] {
+            --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f9f6f0 50%, #f3ece0 100%);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(212, 175, 55, 0.3);
+            --accent-gold: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
+            --text-gold: #b38f1d;
+            --text-dark: #3a321d;
+            --text-muted: #7c7056;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --btn-gold: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+            --title-color: #8a6d0f;
+        }
+
+        /* 3. ثيم اللافندر والبنفسجي الناعم */
+        [data-theme="lavender"] {
+            --bg-gradient: linear-gradient(135deg, #f8f5fc 0%, #f1eaf9 50%, #e6daf2 100%);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(186, 164, 214, 0.4);
+            --accent-gold: linear-gradient(135deg, #baa4d6 0%, #e1d4f0 50%, #9073b5 100%);
+            --text-gold: #8561ad;
+            --text-dark: #2e233d;
+            --text-muted: #6f5f85;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --btn-gold: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+            --title-color: #6d28d9;
+        }
+
+        /* 4. ثيم الفستقي والمينت الهادئ */
+        [data-theme="mint"] {
+            --bg-gradient: linear-gradient(135deg, #f4fbf7 0%, #e8f7f0 50%, #daf2e6 100%);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(164, 214, 186, 0.4);
+            --accent-gold: linear-gradient(135deg, #a4d4ba 0%, #d4f0e1 50%, #73b590 100%);
+            --text-gold: #5ea37d;
+            --text-dark: #233d2f;
+            --text-muted: #5f8571;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --btn-gold: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            --title-color: #047857;
+        }
+
+        /* 5. الثيم الليلي الفاخر والروز جولد */
+        [data-theme="luxury-dark"] {
+            --bg-gradient: linear-gradient(135deg, #1e1b1c 0%, #121011 50%, #1a1617 100%);
+            --card-bg: rgba(35, 30, 32, 0.85);
+            --card-border: rgba(229, 169, 180, 0.2);
+            --accent-gold: linear-gradient(135deg, #e5a9b4 0%, #d48b98 50%, #b36471 100%);
+            --text-gold: #e5a9b4;
+            --text-dark: #f5f0f1;
+            --text-muted: #b3a2a5;
+            --input-bg: rgba(45, 40, 42, 0.9);
+            --btn-gold: linear-gradient(135deg, #e5a9b4 0%, #d48b98 100%);
+            --title-color: #e5a9b4;
         }
 
         * {
@@ -27,6 +85,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Cairo', sans-serif;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
@@ -48,7 +107,7 @@
             width: 100%;
             max-width: 750px;
             padding: 35px;
-            box-shadow: 0 15px 35px rgba(229, 169, 180, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
         }
@@ -71,7 +130,7 @@
         header h1 {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, #b36471 0%, #d48b98 100%);
+            background: var(--accent-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 5px;
@@ -84,14 +143,32 @@
             font-weight: 600;
         }
 
+        /* شريط التبديل السريع بين الثيمات */
+        .theme-selector-wrapper {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px dashed var(--card-border);
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        [data-theme="luxury-dark"] .theme-selector-wrapper {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
         /* شريط البحث السحابي */
         .search-section {
-            background: rgba(247, 231, 235, 0.4);
-            border: 1px solid rgba(229, 169, 180, 0.3);
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 15px;
             margin-bottom: 25px;
         }
+        [data-theme="luxury-dark"] .search-section { background: rgba(0,0,0,0.15); }
 
         .search-box {
             display: flex;
@@ -101,8 +178,8 @@
         .search-box input {
             flex: 1;
             padding: 12px 15px;
-            background: #fff;
-            border: 1px solid rgba(229, 169, 180, 0.4);
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
             border-radius: 10px;
             color: var(--text-dark);
             font-size: 14px;
@@ -110,8 +187,7 @@
         }
 
         .search-box input:focus {
-            border-color: #d48b98;
-            box-shadow: 0 0 8px rgba(212, 139, 152, 0.2);
+            border-color: var(--text-gold);
         }
 
         .search-btn {
@@ -125,11 +201,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            transition: all 0.3s;
-        }
-
-        .search-btn:hover {
-            filter: brightness(1.05);
         }
 
         .search-results {
@@ -137,35 +208,34 @@
             max-height: 150px;
             overflow-y: auto;
             display: none;
-            background: #fff;
+            background: var(--input-bg);
             border-radius: 10px;
-            border: 1px solid rgba(229, 169, 180, 0.3);
+            border: 1px solid var(--card-border);
         }
 
         .result-item {
             padding: 10px 15px;
-            border-bottom: 1px solid #fceef1;
+            border-bottom: 1px solid var(--card-border);
             cursor: pointer;
             font-size: 13px;
-            transition: background 0.2s;
             display: flex;
             justify-content: space-between;
             color: var(--text-dark);
         }
 
         .result-item:hover {
-            background: #fff0f3;
-            color: #b36471;
+            background: rgba(0,0,0,0.05);
+            color: var(--title-color);
         }
 
         .section-title {
             font-size: 16px;
-            color: #b36471;
+            color: var(--title-color);
             margin: 25px 0 15px 0;
             display: flex;
             align-items: center;
             gap: 10px;
-            border-bottom: 2px solid #fceef1;
+            border-bottom: 2px solid var(--card-border);
             padding-bottom: 8px;
             font-weight: 700;
         }
@@ -212,12 +282,11 @@
             width: 100%;
             padding: 12px 45px 12px 15px;
             background: var(--input-bg);
-            border: 1px solid rgba(229, 169, 180, 0.4);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             color: var(--text-dark);
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s ease;
             outline: none;
         }
 
@@ -227,9 +296,8 @@
         }
 
         .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
-            border-color: #d48b98;
-            box-shadow: 0 0 8px rgba(212, 139, 152, 0.2);
-            background: #fff;
+            border-color: var(--text-gold);
+            background: var(--input-bg);
         }
 
         .textarea-large {
@@ -242,9 +310,9 @@
         }
 
         .btn-view-details {
-            background: #fff;
-            border: 1px solid #e5a9b4;
-            color: #b36471;
+            background: var(--input-bg);
+            border: 1px solid var(--text-gold);
+            color: var(--title-color);
             padding: 14px;
             border-radius: 12px;
             font-size: 14px;
@@ -255,8 +323,6 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(229, 169, 180, 0.1);
         }
 
         .btn-view-details:hover {
@@ -265,11 +331,11 @@
             border-color: transparent;
         }
 
-        /* نافذة المودال المنبثقة الفاتحة */
+        /* نافذة المودال */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(74, 53, 56, 0.4);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(8px);
             display: flex;
             justify-content: center;
@@ -283,35 +349,34 @@
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         
         .modal-card {
-            background: #fff;
-            border: 1px solid rgba(229, 169, 180, 0.5);
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             width: 100%; max-width: 550px;
-            padding: 25px; box-shadow: 0 15px 40px rgba(74, 53, 56, 0.15);
+            padding: 25px;
             transform: scale(0.8); transition: all 0.3s ease;
         }
         
         .modal-overlay.active .modal-card { transform: scale(1); }
-        .modal-header { font-size: 18px; color: #b36471; font-weight: 700; border-bottom: 2px solid #fceef1; padding-bottom: 10px; margin-bottom: 15px; }
+        .modal-header { font-size: 18px; color: var(--title-color); font-weight: 700; border-bottom: 2px solid var(--card-border); padding-bottom: 10px; margin-bottom: 15px; }
         .modal-body { font-size: 15px; color: var(--text-dark); line-height: 1.8; white-space: pre-line; max-height: 350px; overflow-y: auto; font-weight: 600; }
         .modal-close-btn { background: var(--btn-gold); border: none; color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
 
         /* تفاصيل الفاتورة */
         .invoice-bill-box {
-            background: #fff;
-            border: 1px solid rgba(229, 169, 180, 0.4);
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 20px;
             margin-top: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(229, 169, 180, 0.05);
         }
 
         .bill-row {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #fceef1;
+            border-bottom: 1px solid var(--card-border);
             font-size: 14px;
             font-weight: 600;
         }
@@ -321,18 +386,18 @@
             padding-top: 15px;
             font-size: 18px;
             font-weight: 700;
-            color: #b36471;
+            color: var(--title-color);
         }
 
         .bill-row.total-row .price-val {
-            color: #b36471;
+            color: var(--title-color);
             font-size: 24px;
             font-weight: 700;
         }
 
         .price-val span { font-size: 13px; margin-right: 3px; font-weight: 600; }
 
-        /* أزرار التحكم والخيارات المحدثة */
+        /* أزرار التحكم والخيارات */
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -369,7 +434,6 @@
 
         .btn-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 169, 180, 0.3);
             filter: brightness(1.05);
         }
 
@@ -378,7 +442,7 @@
         }
 
         body.view-only input, body.view-only textarea, body.view-only select {
-            pointer-events: none; background: #faf5f6; border-color: #f2e2e5; color: #7a6568;
+            pointer-events: none; opacity: 0.85;
         }
         body.view-only .admin-only { display: none; }
     </style>
@@ -388,12 +452,24 @@
     <div class="invoice-container">
         <header>
             <h1><i class="fa-solid fa-birthday-cake"></i> متجر الكيك الفاخر</h1>
-            <p id="pageSubtitle">نظام إدارة ومزامنة الطلبات السحابية</p>
+            <p id="pageSubtitle">نظام إدارة ومزامنة الطلبات السحابية متعدد الثيمات</p>
         </header>
+
+        <!-- لوحة التحكم بالثيم المظهرية (تختفي عند الزبونة وتظهر للمشرف فقط للاختيار) -->
+        <div class="theme-selector-wrapper admin-only">
+            <label style="font-size: 13px; font-weight: 700; color: var(--text-dark);"><i class="fa-solid fa-palette"></i> اختر ثيم ولون الفاتورة الحالي:</label>
+            <select id="themeSelector" onchange="changeTheme(this.value)" style="width: auto; padding: 5px 15px 5px 30px; font-size: 13px; border-radius: 8px;">
+                <option value="default">🌸 وردي بودري ناعم</option>
+                <option value="royal-gold">✨ ذهبي ملكي وكريمي</option>
+                <option value="lavender">💜 لافندر وبنفسجي هادئ</option>
+                <option value="mint">🍃 مينت وفستقي منعش</option>
+                <option value="luxury-dark">🌙 أسود فاخر وروز جولد</option>
+            </select>
+        </div>
 
         <!-- لوحة البحث السحابي -->
         <div class="search-section admin-only">
-            <div class="section-title" style="margin-top: 0; border-bottom-color: rgba(229, 169, 180, 0.2);"><i class="fa-solid fa-cloud-magnifying-glass"></i> البحث السحابي واسترجاع الفواتير</div>
+            <div class="section-title" style="margin-top: 0; border-bottom-color: var(--card-border);"><i class="fa-solid fa-cloud-magnifying-glass"></i> البحث السحابي واسترجاع الفواتير</div>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="ابحث باسم العميل أو رقم الجوال هنا...">
                 <button class="search-btn" onclick="searchCloudOrders()"><i class="fa-solid fa-magnifying-glass"></i> بحث</button>
@@ -496,7 +572,7 @@
             </div>
         </div>
 
-        <!-- زر العرض المريح للعميل ولصاحبة المتجر -->
+        <!-- زر العرض المريح -->
         <div class="input-group">
             <label id="btnLabel">مواصفات الفاتورة الفنية</label>
             <button class="btn-view-details" onclick="openDetailsModal()">
@@ -529,7 +605,7 @@
             </div>
         </div>
 
-        <!-- حسابات الفاتورة الرسمية الناعمة -->
+        <!-- حسابات الفاتورة الرسمية -->
         <div class="invoice-bill-box">
             <div class="bill-row">
                 <span>سعر الطلب (الكيك الأساسي):</span>
@@ -549,7 +625,7 @@
             </div>
         </div>
 
-        <!-- خيارات التحكم والمزامنة المحدثة بالأيقونة المطلوبة -->
+        <!-- خيارات التحكم والمزامنة -->
         <div class="actions-grid admin-only">
             <button class="btn-action btn-save-cloud" onclick="saveOrderToCloud()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ومزامنة السحابة ☁️
@@ -557,7 +633,6 @@
             <button class="btn-action btn-share-link" onclick="generateShareableLink()">
                 <i class="fa-solid fa-share-nodes"></i> توليد رابط العميل الذكي
             </button>
-            <!-- زر فتح صفحة الاختصار الخاص بك -->
             <button class="btn-action btn-open-shortener btn-full-width" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة اختصار الروابط (N) 🌐
             </button>
@@ -621,12 +696,13 @@
                 extDet: document.getElementById('extraDetails').value,
                 extPrice: document.getElementById('extraPrice').value,
                 notes: document.getElementById('notes').value,
+                theme: document.getElementById('themeSelector').value, // حفظ الثيم المختار سحابياً
                 savedAt: new Date()
             };
 
             try {
                 await setDoc(doc(db, "cake_orders", phone), orderData);
-                showStatus("✅ تم حفظ ومزامنة طلب " + name + " سحابياً بنجاح! ☁️", "#10b981");
+                showStatus("✅ تم حفظ ومزامنة طلب " + name + " سحابياً بنجاح! ☁️", "var(--title-color)");
             } catch (error) {
                 showStatus("❌ خطأ أثناء الحفظ بالسحابة: " + error.message, "#ef4444");
             }
@@ -656,7 +732,7 @@
                         const item = document.createElement('div');
                         item.className = "result-item";
                         item.setAttribute("onclick", `loadSelectedOrder('${btoa(unescape(encodeURIComponent(JSON.stringify(data))))}')`);
-                        item.innerHTML = `<span>👤 ${custName}</span> <span style="color:#b36471; font-weight:700;">📱 ${custPhone}</span>`;
+                        item.innerHTML = `<span>👤 ${custName}</span> <span style="color:var(--title-color); font-weight:700;">📱 ${custPhone}</span>`;
                         resultsBox.appendChild(item);
                     }
                 });
@@ -664,7 +740,7 @@
                 if(found) {
                     resultsBox.style.display = "block";
                 } else {
-                    resultsBox.innerHTML = "<div style='padding:10px; font-size:12px; color:#c57b88;'>❌ لم يتم العثور على نتائج متطابقة بالسحابة.</div>";
+                    resultsBox.innerHTML = "<div style='padding:10px; font-size:12px; color:var(--text-muted);'>❌ لم يتم العثور على نتائج متطابقة بالسحابة.</div>";
                     resultsBox.style.display = "block";
                 }
 
@@ -689,12 +765,20 @@
             document.getElementById('extraDetails').value = data.extDet || "";
             document.getElementById('extraPrice').value = data.extPrice || 0;
             document.getElementById('notes').value = data.notes || "";
+            
+            if(data.theme) {
+                document.getElementById('themeSelector').value = data.theme;
+                changeTheme(data.theme);
+            } else {
+                document.getElementById('themeSelector').value = "default";
+                changeTheme("default");
+            }
 
             toggleDeliveryFields();
             calculateTotal();
             
             document.getElementById('searchResultsBox').style.display = "none";
-            showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "#4869d6");
+            showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "var(--title-color)");
         }
 
         function generateShareableLink() {
@@ -711,7 +795,8 @@
                 details: document.getElementById('cakeDetails').value,
                 extDet: document.getElementById('extraDetails').value,
                 extPrice: document.getElementById('extraPrice').value,
-                notes: document.getElementById('notes').value
+                notes: document.getElementById('notes').value,
+                theme: document.getElementById('themeSelector').value // تضمين الثيم داخل الرابط للعميل
             };
 
             const jsonString = JSON.stringify(data);
@@ -719,7 +804,7 @@
             const originalLongUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
 
             navigator.clipboard.writeText(originalLongUrl).then(() => {
-                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه تلقائياً!\n\nاضغط الآن على الزر الأخضر بالأسفل (N) للانتقال إلى صفحة الاختصار ولصقه هناك.");
+                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه تلقائياً!\n\nسيظهر للعميل بنفس الثيم واللون الذي اخترته حالياً.");
             }).catch(() => {
                 prompt("انسخ الرابط الطويل من هنا:", originalLongUrl);
             });
@@ -734,8 +819,17 @@
         }
     </script>
 
-    <!-- العمليات التفاعلية الأساسية للفاتورة -->
+    <!-- العمليات التفاعلية الأساسية للفاتورة والثيمات -->
     <script>
+        function changeTheme(themeName) {
+            if (themeName === "default") {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', themeName);
+            }
+            calculateTotal(); // تحديث ألوان العملات ديناميكياً
+        }
+
         function toggleDeliveryFields() {
             const type = document.getElementById('deliveryType').value;
             const deliveryFields = document.getElementById('delivery-fields');
@@ -794,6 +888,11 @@
                     document.getElementById('extraDetails').value = data.extDet || "";
                     document.getElementById('extraPrice').value = data.extPrice || 0;
                     document.getElementById('notes').value = data.notes || "";
+
+                    // تطبيق الثيم المبعوث بالرابط للزبونة تلقائياً
+                    if(data.theme) {
+                        changeTheme(data.theme);
+                    }
 
                     if(data.delType === 'delivery') {
                         document.getElementById('delivery-fields').style.display = 'block';
