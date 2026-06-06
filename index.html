@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة ومزامنة طلبات الكيك الفاخر</title>
-    <!-- خطوط جوجل وفونت أوسم للأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -328,14 +327,21 @@
 
         .price-val span { font-size: 13px; margin-right: 3px; font-weight: 600; }
 
+        /* تعديل توزيع لوحة التحكم في الأزرار السفلية لتكون متناسقة */
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+            margin-top: 20px;
         }
 
-        @media (max-width: 500px) {
+        .btn-full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 550px) {
             .actions-grid { grid-template-columns: 1fr; }
+            .btn-full-width { grid-column: span 1; }
         }
 
         .btn-action {
@@ -355,30 +361,7 @@
 
         .btn-save-cloud { background: linear-gradient(135deg, #6b8eff 0%, #4869d6 100%); }
         .btn-share-link { background: var(--btn-gold); }
-
-        /* تنسيق صندوق الاختصار اليدوي السفلي */
-        .manual-shortener-box {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px dashed rgba(229, 169, 180, 0.6);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 35px;
-            box-shadow: 0 8px 20px rgba(229, 169, 180, 0.1);
-        }
-
-        .btn-manual-short {
-            background: linear-gradient(135deg, #44b9a1 0%, #2a8f79 100%);
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn-open-page {
-            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
-            width: 100%;
-            margin-top: 8px;
-            font-size: 13px;
-            padding: 10px;
-        }
+        .btn-open-shortener { background: linear-gradient(135deg, #2a8f79 0%, #44b9a1 100%); }
 
         #status-msg {
             text-align: center; margin-top: 15px; font-weight: 700; font-size: 14px; opacity: 0; transition: opacity 0.3s;
@@ -398,7 +381,6 @@
             <p id="pageSubtitle">نظام إدارة ومزامنة الطلبات السحابية</p>
         </header>
 
-        <!-- لوحة البحث السحابي -->
         <div class="search-section admin-only">
             <div class="section-title" style="margin-top: 0; border-bottom-color: rgba(229, 169, 180, 0.2);"><i class="fa-solid fa-cloud-magnifying-glass"></i> البحث السحابي واسترجاع الفواتير</div>
             <div class="search-box">
@@ -408,7 +390,6 @@
             <div class="search-results" id="searchResultsBox"></div>
         </div>
 
-        <!-- بيانات العميل والوقت -->
         <div class="section-title"><i class="fa-solid fa-user-tag"></i> بيانات العميل والوقت</div>
         <div class="grid-2">
             <div class="input-group">
@@ -444,7 +425,6 @@
             </div>
         </div>
 
-        <!-- آلية التسليم -->
         <div class="section-title"><i class="fa-solid fa-truck"></i> آلية التسليم</div>
         <div class="input-group">
             <label>نوع التسليم</label>
@@ -457,7 +437,6 @@
             </div>
         </div>
 
-        <!-- حقول التوصيل -->
         <div id="delivery-fields">
             <div class="grid-2">
                 <div class="input-group">
@@ -484,7 +463,6 @@
             </div>
         </div>
 
-        <!-- مواصفات الكيك -->
         <div class="section-title"><i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك</div>
         
         <div class="input-group">
@@ -503,7 +481,6 @@
             </div>
         </div>
 
-        <!-- زر العرض المريح -->
         <div class="input-group">
             <label id="btnLabel">مواصفات الفاتورة الفنية</label>
             <button class="btn-view-details" onclick="openDetailsModal()">
@@ -536,7 +513,6 @@
             </div>
         </div>
 
-        <!-- حسابات الفاتورة -->
         <div class="invoice-bill-box">
             <div class="bill-row">
                 <span>سعر الطلب (الكيك الأساسي):</span>
@@ -556,7 +532,6 @@
             </div>
         </div>
 
-        <!-- أزرار المزامنة والتوليد -->
         <div class="actions-grid admin-only">
             <button class="btn-action btn-save-cloud" onclick="saveOrderToCloud()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ومزامنة السحابة ☁️
@@ -564,34 +539,14 @@
             <button class="btn-action btn-share-link" onclick="generateLongInvoiceLink()">
                 <i class="fa-solid fa-share-nodes"></i> توليد رابط العميل الطويل 🔗
             </button>
-        </div>
-
-        <!-- 🔗 بوابة الاختصار اليدوية بالأسفل -->
-        <div class="manual-shortener-box admin-only">
-            <div class="section-title" style="margin-top:0; color:#2a8f79; border-bottom-color: rgba(68,185,161,0.2);">
-                <i class="fa-solid fa-link-slash"></i> بوابة اختصار الروابط العامة واليدوية
-            </div>
-            <div class="input-group">
-                <label style="color:#567870;">أدخل أو الصق الرابط الطويل هنا لاختصاره:</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-link" style="color:#2a8f79;"></i>
-                    <input type="text" id="manualLongUrlInput" placeholder="https://example.com/any-long-link-here...">
-                </div>
-            </div>
-            <button class="btn-action btn-manual-short" onclick="shortenLinkManually()">
-                <i class="fa-solid fa-scissors"></i> اضغط هنا لاختصار الرابط المكتوب وتجهيزه ✂️
-            </button>
-            
-            <!-- زر احتياطي ذكي لفتح صفحة الاختصار الأصلية مباشرة لتجنب أي مشاكل بالفايربيس -->
-            <button class="btn-action btn-open-page" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة الاختصارات المستقلة الخاصة بك في نافذة جديدة 🌐
+            <button class="btn-action btn-open-shortener btn-full-width" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة اختصار الروابط المستقلة (N) 🌐
             </button>
         </div>
 
         <div id="status-msg"></div>
     </div>
 
-    <!-- نافذة المودال لعرض النص الطويل -->
     <div class="modal-overlay" id="detailsModal" onclick="closeDetailsModal()">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="modal-header"><i class="fa-solid fa-birthday-cake"></i> تفاصيل ومواصفات الطلب بالكامل</div>
@@ -600,7 +555,6 @@
         </div>
     </div>
 
-    <!-- محرك السحابة Firebase بالتزامن واختصار الروابط -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -622,7 +576,6 @@
         window.searchCloudOrders = searchCloudOrders;
         window.loadSelectedOrder = loadSelectedOrder;
         window.generateLongInvoiceLink = generateLongInvoiceLink;
-        window.shortenLinkManually = shortenLinkManually;
 
         async function saveOrderToCloud() {
             const phone = document.getElementById('custPhone').value.trim();
@@ -745,45 +698,10 @@
             const originalLongUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
 
             navigator.clipboard.writeText(originalLongUrl).then(() => {
-                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه في الحافظة!\n\nيمكنك الآن لصقه في صندوق الاختصار بالأسفل إذا أردتِ تقصيره.");
+                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه في الحافظة تلقائياً!\n\nيمكنك الآن الضغط على الزر الأخضر بالأسفل للانتقال لصفحة الاختصار ولصقه هناك.");
             }).catch(() => {
                 prompt("انسخ الرابط الطويل من هنا:", originalLongUrl);
             });
-        }
-
-        // تم إصلاح الدالة لتكتب تماماً بنفس الطريقة المتوافقة والمجربة في صفحتك المستقلة
-        async function shortenLinkManually() {
-            const inputLink = document.getElementById('manualLongUrlInput').value.trim();
-
-            if (!inputLink) {
-                alert("⚠️ الرجاء لصق أو كتابة الرابط أولاً في الخانة المحددة!");
-                return;
-            }
-
-            // توليد معرف عشوائي مكون من 5 عناصر
-            const shortId = Math.random().toString(36).substring(2, 7);
-
-            try {
-                // تعديل هيكل البيانات ليطابق البنية البرمجية لسيستم الاختصار الخاص بك تماماً
-                await setDoc(doc(db, "urls", shortId), {
-                    url: inputLink,
-                    longUrl: inputLink,
-                    createdAt: new Date()
-                });
-
-                const finalShortUrl = "https://abonaoaf.github.io/N/?id=" + shortId;
-
-                navigator.clipboard.writeText(finalShortUrl).then(() => {
-                    alert("🚀 تم اختصار الرابط بنجاح!\n\nالرابط الجديد القصير:\n" + finalShortUrl + "\n\n(تم نسخه تلقائياً).");
-                    document.getElementById('manualLongUrlInput').value = ""; 
-                }).catch(() => {
-                    prompt("انسخ الرابط المختصر من هنا:", finalShortUrl);
-                });
-
-            } catch (error) {
-                console.error("خطأ في الاتصال بالفايربيس:", error);
-                alert("❌ تعذر الاختصار المباشر بسبب قيود الوصول السحابية. يمكنكِ استخدام الزر البرتقالي بالأسفل للاختصار الآمن والمضمون عبر صفحتك المستقلة مباشرة!");
-            }
         }
 
         function showStatus(text, color) {
@@ -795,7 +713,6 @@
         }
     </script>
 
-    <!-- العمليات التفاعلية الأساسية للفاتورة -->
     <script>
         function toggleDeliveryFields() {
             const type = document.getElementById('deliveryType').value;
@@ -848,34 +765,4 @@
                     document.getElementById('deliveryTime').value = data.dTime || "";
                     document.getElementById('deliveryType').value = data.delType || "pickup";
                     document.getElementById('deliveryPrice').value = data.delPrice || 0;
-                    document.getElementById('driverNum').value = data.driver || "";
-                    document.getElementById('driverTime').value = data.driverT || "";
-                    document.getElementById('cakePrice').value = data.cakeP || 0;
-                    document.getElementById('cakeDetails').value = data.details || "";
-                    document.getElementById('extraDetails').value = data.extDet || "";
-                    document.getElementById('extraPrice').value = data.extPrice || 0;
-                    document.getElementById('notes').value = data.notes || "";
-
-                    if(data.delType === 'delivery') {
-                        document.getElementById('delivery-fields').style.display = 'block';
-                    }
-
-                    calculateTotal();
-
-                    document.body.classList.add('view-only');
-                    document.getElementById('pageSubtitle').innerText = "الفاتورة الرقمية الرسمية المعتمدة للطلب";
-                    document.getElementById('btnLabel').innerText = "تفاصيل ومواصفات الكيك المتفق عليها";
-
-                    document.querySelectorAll('input, textarea, select').forEach(el => {
-                        el.readOnly = true;
-                        el.disabled = true;
-                    });
-
-                } catch (e) {
-                    console.error("خطأ فك ترميز الرابط:", e);
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+                    document.getElementById('driverNum').value
