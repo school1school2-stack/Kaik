@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة ومزامنة طلبات الكيك الفاخر</title>
-    <!-- خطوط جوجل وفونت أوسم للأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            /* هوية لونية نسائية فاخرة وناعمة (وردي بودري، كريمي، وذهبي روز) */
             --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fef0f3 50%, #f7e7eb 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
             --card-border: rgba(234, 182, 192, 0.4);
@@ -84,7 +82,6 @@
             font-weight: 600;
         }
 
-        /* شريط البحث السحابي */
         .search-section {
             background: rgba(247, 231, 235, 0.4);
             border: 1px solid rgba(229, 169, 180, 0.3);
@@ -265,7 +262,6 @@
             border-color: transparent;
         }
 
-        /* نافذة المودال المنبثقة الفاتحة */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -296,7 +292,6 @@
         .modal-body { font-size: 15px; color: var(--text-dark); line-height: 1.8; white-space: pre-line; max-height: 350px; overflow-y: auto; font-weight: 600; }
         .modal-close-btn { background: var(--btn-gold); border: none; color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
 
-        /* تفاصيل الفاتورة */
         .invoice-bill-box {
             background: #fff;
             border: 1px solid rgba(229, 169, 180, 0.4);
@@ -332,7 +327,6 @@
 
         .price-val span { font-size: 13px; margin-right: 3px; font-weight: 600; }
 
-        /* أزرار التحكم والخيارات */
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -361,10 +355,20 @@
         .btn-save-cloud { background: linear-gradient(135deg, #6b8eff 0%, #4869d6 100%); }
         .btn-share-link { background: var(--btn-gold); }
 
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 169, 180, 0.3);
-            filter: brightness(1.05);
+        /* تنسيق الصندوق اليدوي السفلي الجديد */
+        .manual-shortener-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px dashed rgba(229, 169, 180, 0.6);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 35px;
+            box-shadow: 0 8px 20px rgba(229, 169, 180, 0.1);
+        }
+
+        .btn-manual-short {
+            background: linear-gradient(135deg, #44b9a1 0%, #2a8f79 100%);
+            width: 100%;
+            margin-top: 10px;
         }
 
         #status-msg {
@@ -385,7 +389,6 @@
             <p id="pageSubtitle">نظام إدارة ومزامنة الطلبات السحابية</p>
         </header>
 
-        <!-- لوحة البحث السحابي -->
         <div class="search-section admin-only">
             <div class="section-title" style="margin-top: 0; border-bottom-color: rgba(229, 169, 180, 0.2);"><i class="fa-solid fa-cloud-magnifying-glass"></i> البحث السحابي واسترجاع الفواتير</div>
             <div class="search-box">
@@ -395,7 +398,6 @@
             <div class="search-results" id="searchResultsBox"></div>
         </div>
 
-        <!-- بيانات العميل والوقت -->
         <div class="section-title"><i class="fa-solid fa-user-tag"></i> بيانات العميل والوقت</div>
         <div class="grid-2">
             <div class="input-group">
@@ -431,7 +433,6 @@
             </div>
         </div>
 
-        <!-- آلية التسليم -->
         <div class="section-title"><i class="fa-solid fa-truck"></i> آلية التسليم</div>
         <div class="input-group">
             <label>نوع التسليم</label>
@@ -444,7 +445,6 @@
             </div>
         </div>
 
-        <!-- حقول التوصيل -->
         <div id="delivery-fields">
             <div class="grid-2">
                 <div class="input-group">
@@ -471,7 +471,6 @@
             </div>
         </div>
 
-        <!-- مواصفات الكيك -->
         <div class="section-title"><i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك</div>
         
         <div class="input-group">
@@ -490,7 +489,6 @@
             </div>
         </div>
 
-        <!-- زر العرض المريح -->
         <div class="input-group">
             <label id="btnLabel">مواصفات الفاتورة الفنية</label>
             <button class="btn-view-details" onclick="openDetailsModal()">
@@ -523,7 +521,6 @@
             </div>
         </div>
 
-        <!-- حسابات الفاتورة الرسمية الناعمة -->
         <div class="invoice-bill-box">
             <div class="bill-row">
                 <span>سعر الطلب (الكيك الأساسي):</span>
@@ -543,7 +540,6 @@
             </div>
         </div>
 
-        <!-- خيارات التحكم والمزامنة واختصار الروابط -->
         <div class="actions-grid admin-only">
             <button class="btn-action btn-save-cloud" onclick="saveOrderToCloud()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ومزامنة السحابة ☁️
@@ -553,10 +549,25 @@
             </button>
         </div>
 
+        <div class="manual-shortener-box admin-only">
+            <div class="section-title" style="margin-top:0; color:#2a8f79; border-bottom-color: rgba(68,185,161,0.2);">
+                <i class="fa-solid fa-link-slash"></i> بوابة اختصار الروابط العامة واليدوية
+            </div>
+            <div class="input-group">
+                <label style="color:#567870;">أدخل أو الصق أي رابط طويل هنا لاختصاره فوراً:</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-link" style="color:#2a8f79;"></i>
+                    <input type="text" id="manualLongUrlInput" placeholder="https://example.com/any-long-link-here...">
+                </div>
+            </div>
+            <button class="btn-action btn-manual-short" onclick="shortenLinkManually()">
+                <i class="fa-solid fa-scissors"></i> اضغط هنا لاختصار الرابط المكتوب وتجهيزه ✂️
+            </button>
+        </div>
+
         <div id="status-msg"></div>
     </div>
 
-    <!-- نافذة المودال لعرض النص الطويل -->
     <div class="modal-overlay" id="detailsModal" onclick="closeDetailsModal()">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="modal-header"><i class="fa-solid fa-birthday-cake"></i> تفاصيل ومواصفات الطلب بالكامل</div>
@@ -565,7 +576,6 @@
         </div>
     </div>
 
-    <!-- محرك السحابة Firebase بالتزامن المباشر واختصار الروابط -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -587,6 +597,7 @@
         window.searchCloudOrders = searchCloudOrders;
         window.loadSelectedOrder = loadSelectedOrder;
         window.generateShareableLink = generateShareableLink;
+        window.shortenLinkManually = shortenLinkManually; // ربط الدالة الجديدة بالنافذة
 
         async function saveOrderToCloud() {
             const phone = document.getElementById('custPhone').value.trim();
@@ -687,7 +698,7 @@
             showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "#4869d6");
         }
 
-        // دالة توليد الرابط الطويل واختصاره ودمجه مع سحابة abonaoaf.github.io/N/
+        // 1. الدالة التلقائية لكود الكيك المصلح بالكامل
         async function generateShareableLink() {
             const data = {
                 name: document.getElementById('custName').value,
@@ -707,35 +718,64 @@
 
             const jsonString = JSON.stringify(data);
             const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
-            
-            // الرابط الأصلي الطويل التابع للمشروع الحالي
             const originalLongUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
 
-            // توليد كود اختصار عشوائي قصير وفريد
-            const shortId = "cake-" + Math.random().toString(36).substring(2, 7);
+            const shortId = Math.random().toString(36).substring(2, 7);
 
             try {
-                // حفظ الرابط المختصر داخل فرع الروابط `links` لتتمكن منصة N من قراءته وتوجيهه فوراً
-                await setDoc(doc(db, "links", shortId), {
+                await setDoc(doc(db, "urls", shortId), {
                     url: originalLongUrl,
+                    longUrl: originalLongUrl,
                     createdAt: new Date()
                 });
 
-                // الرابط الفخم النهائي المختصر والجاهز لإرساله بالواتساب!
                 const finalShortUrl = "https://abonaoaf.github.io/N/?id=" + shortId;
 
                 navigator.clipboard.writeText(finalShortUrl).then(() => {
-                    alert("✨ تم توليد الرابط الفخم المختصر ونسخه بنجاح!\n\n" + finalShortUrl + "\n\nأرسله للعميل الآن عبر الواتساب.");
+                    alert("✨ تم توليد الرابط المختصر التلقائي ونسخه بنجاح!\n\n" + finalShortUrl);
                 }).catch(() => {
-                    prompt("انسخ الرابط المختصر من هنا:", finalShortUrl);
+                    prompt("انسخ الرابط المختصر التلقائي:", finalShortUrl);
                 });
 
             } catch (error) {
-                // في حال تعذر الاتصال السريع، نمنحها الرابط الطويل كخيار احتياطي لضمان عدم تعطل العمل
                 console.error("خطأ اختصار الرابط:", error);
-                navigator.clipboard.writeText(originalLongUrl).then(() => {
-                    alert("تم نسخ الرابط الأساسي بنجاح (ملاحظة: تعذر الاختصار السحابي المؤقت، تم نسخ الرابط الطويل).");
+                navigator.clipboard.writeText(originalLongUrl);
+            }
+        }
+
+        // 2. الدالة الجديدة تماماً للاختصار اليدوي العام (تأخذ الرابط وتخزنه بفرع urls ليعمل مع N)
+        async function shortenLinkManually() {
+            const inputLink = document.getElementById('manualLongUrlInput').value.trim();
+
+            if (!inputLink) {
+                alert("⚠️ الرجاء لصق أو كتابة الرابط أولاً في الخانة المحددة!");
+                return;
+            }
+
+            // توليد كود عشوائي فريد ومميز
+            const shortId = Math.random().toString(36).substring(2, 7);
+
+            try {
+                // الحفظ بجدول الـ urls المعتمد داخل سيستم N
+                await setDoc(doc(db, "urls", shortId), {
+                    url: inputLink,
+                    longUrl: inputLink,
+                    createdAt: new Date()
                 });
+
+                // دمج الكود مع رابط التوجيه الخاص بك
+                const finalShortUrl = "https://abonaoaf.github.io/N/?id=" + shortId;
+
+                navigator.clipboard.writeText(finalShortUrl).then(() => {
+                    alert("🚀 ممتاز! تم اختصار الرابط اليدوي ومزامنته مع سيستم N بنجاح.\n\nالرابط الجديد القصير:\n" + finalShortUrl + "\n\n(تم نسخه تلقائياً لشرائح الحافظة لديك).");
+                    document.getElementById('manualLongUrlInput').value = ""; // تفريغ الحقل بعد النجاح
+                }).catch(() => {
+                    prompt("انسخ الرابط اليدوي المختصر المصلح من هنا:", finalShortUrl);
+                });
+
+            } catch (error) {
+                console.error("خطأ أثناء الاختصار اليدوي السحابي:", error);
+                alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
             }
         }
 
@@ -748,88 +788,4 @@
         }
     </script>
 
-    <!-- العمليات التفاعلية الأساسية للفاتورة -->
     <script>
-        function toggleDeliveryFields() {
-            const type = document.getElementById('deliveryType').value;
-            const deliveryFields = document.getElementById('delivery-fields');
-            const deliveryPriceInput = document.getElementById('deliveryPrice');
-
-            if (type === 'delivery') {
-                deliveryFields.style.display = 'block';
-            } else {
-                deliveryFields.style.display = 'none';
-                deliveryPriceInput.value = 0;
-                calculateTotal();
-            }
-        }
-
-        function calculateTotal() {
-            const cakePrice = parseFloat(document.getElementById('cakePrice').value) || 0;
-            const extraPrice = parseFloat(document.getElementById('extraPrice').value) || 0;
-            const deliveryPrice = parseFloat(document.getElementById('deliveryPrice').value) || 0;
-            
-            const total = cakePrice + extraPrice + deliveryPrice;
-
-            document.getElementById('billCakePrice').innerHTML = cakePrice.toFixed(2) + ' <span>ريال</span>';
-            document.getElementById('billExtraPrice').innerHTML = extraPrice.toFixed(2) + ' <span>ريال</span>';
-            document.getElementById('billDeliveryPrice').innerHTML = deliveryPrice.toFixed(2) + ' <span>ريال</span>';
-            document.getElementById('billTotalAmount').innerHTML = total.toFixed(2) + ' <span>ريال</span>';
-        }
-
-        function openDetailsModal() {
-            const textValue = document.getElementById('cakeDetails').value || "لا توجد تفاصيل إضافية مدرجة.";
-            document.getElementById('modalTextContent').textContent = textValue;
-            document.getElementById('detailsModal').classList.add('active');
-        }
-
-        function closeDetailsModal() {
-            document.getElementById('detailsModal').classList.remove('active');
-        }
-
-        // قراءة الروابط وحالة العرض للعميل عند الدخول مباشرة
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('invoice')) {
-                try {
-                    const encodedData = urlParams.get('invoice');
-                    const decodedString = decodeURIComponent(escape(atob(encodedData)));
-                    const data = JSON.parse(decodedString);
-
-                    document.getElementById('custName').value = data.name || "";
-                    document.getElementById('custPhone').value = data.phone || "";
-                    document.getElementById('orderTime').value = data.oTime || "";
-                    document.getElementById('deliveryTime').value = data.dTime || "";
-                    document.getElementById('deliveryType').value = data.delType || "pickup";
-                    document.getElementById('deliveryPrice').value = data.delPrice || 0;
-                    document.getElementById('driverNum').value = data.driver || "";
-                    document.getElementById('driverTime').value = data.driverT || "";
-                    document.getElementById('cakePrice').value = data.cakeP || 0;
-                    document.getElementById('cakeDetails').value = data.details || "";
-                    document.getElementById('extraDetails').value = data.extDet || "";
-                    document.getElementById('extraPrice').value = data.extPrice || 0;
-                    document.getElementById('notes').value = data.notes || "";
-
-                    if(data.delType === 'delivery') {
-                        document.getElementById('delivery-fields').style.display = 'block';
-                    }
-
-                    calculateTotal();
-
-                    document.body.classList.add('view-only');
-                    document.getElementById('pageSubtitle').innerText = "الفاتورة الرقمية الرسمية المعتمدة للطلب";
-                    document.getElementById('btnLabel').innerText = "تفاصيل ومواصفات الكيك المتفق عليها";
-
-                    document.querySelectorAll('input, textarea, select').forEach(el => {
-                        el.readOnly = true;
-                        el.disabled = true;
-                    });
-
-                } catch (e) {
-                    console.error("خطأ فك ترميز الرابط:", e);
-                }
-            }
-        });
-    </script>
-</body>
-</html>
