@@ -332,15 +332,20 @@
 
         .price-val span { font-size: 13px; margin-right: 3px; font-weight: 600; }
 
-        /* أزرار التحكم والخيارات */
+        /* أزرار التحكم والخيارات المحدثة */
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
 
+        .btn-full-width {
+            grid-column: span 2;
+        }
+
         @media (max-width: 500px) {
             .actions-grid { grid-template-columns: 1fr; }
+            .btn-full-width { grid-column: span 1; }
         }
 
         .btn-action {
@@ -360,6 +365,7 @@
 
         .btn-save-cloud { background: linear-gradient(135deg, #6b8eff 0%, #4869d6 100%); }
         .btn-share-link { background: var(--btn-gold); }
+        .btn-open-shortener { background: linear-gradient(135deg, #2a8f79 0%, #44b9a1 100%); }
 
         .btn-action:hover {
             transform: translateY(-2px);
@@ -543,13 +549,17 @@
             </div>
         </div>
 
-        <!-- خيارات التحكم والمزامنة -->
+        <!-- خيارات التحكم والمزامنة المحدثة بالأيقونة المطلوبة -->
         <div class="actions-grid admin-only">
             <button class="btn-action btn-save-cloud" onclick="saveOrderToCloud()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ومزامنة السحابة ☁️
             </button>
             <button class="btn-action btn-share-link" onclick="generateShareableLink()">
                 <i class="fa-solid fa-share-nodes"></i> توليد رابط العميل الذكي
+            </button>
+            <!-- زر فتح صفحة الاختصار الخاص بك -->
+            <button class="btn-action btn-open-shortener btn-full-width" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة اختصار الروابط (N) 🌐
             </button>
         </div>
 
@@ -586,13 +596,14 @@
         window.saveOrderToCloud = saveOrderToCloud;
         window.searchCloudOrders = searchCloudOrders;
         window.loadSelectedOrder = loadSelectedOrder;
+        window.generateShareableLink = generateShareableLink;
 
         async function saveOrderToCloud() {
             const phone = document.getElementById('custPhone').value.trim();
             const name = document.getElementById('custName').value.trim();
 
             if (!phone || !name) {
-                showStatus("⚠️ يرجى كتابة اسم العميل ورقم جواله لحفظ الطلب سحابياً بشكل صحيح!", "#ef4444");
+                showStatus("⚠️ يرجى كتابة اسم العميل ورقم جواله لحفظ الطلب سحابياً!", "#ef4444");
                 return;
             }
 
@@ -686,6 +697,34 @@
             showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "#4869d6");
         }
 
+        function generateShareableLink() {
+            const data = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                oTime: document.getElementById('orderTime').value,
+                dTime: document.getElementById('deliveryTime').value,
+                delType: document.getElementById('deliveryType').value,
+                delPrice: document.getElementById('deliveryPrice').value,
+                driver: document.getElementById('driverNum').value,
+                driverT: document.getElementById('driverTime').value,
+                cakeP: document.getElementById('cakePrice').value,
+                details: document.getElementById('cakeDetails').value,
+                extDet: document.getElementById('extraDetails').value,
+                extPrice: document.getElementById('extraPrice').value,
+                notes: document.getElementById('notes').value
+            };
+
+            const jsonString = JSON.stringify(data);
+            const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
+            const originalLongUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
+
+            navigator.clipboard.writeText(originalLongUrl).then(() => {
+                alert("🔗 تم توليد الرابط الطويل بنجاح ونسخه تلقائياً!\n\nاضغط الآن على الزر الأخضر بالأسفل (N) للانتقال إلى صفحة الاختصار ولصقه هناك.");
+            }).catch(() => {
+                prompt("انسخ الرابط الطويل من هنا:", originalLongUrl);
+            });
+        }
+
         function showStatus(text, color) {
             const msg = document.getElementById('status-msg');
             msg.innerText = text;
@@ -734,35 +773,6 @@
             document.getElementById('detailsModal').classList.remove('active');
         }
 
-        function generateShareableLink() {
-            const data = {
-                name: document.getElementById('custName').value,
-                phone: document.getElementById('custPhone').value,
-                oTime: document.getElementById('orderTime').value,
-                dTime: document.getElementById('deliveryTime').value,
-                delType: document.getElementById('deliveryType').value,
-                delPrice: document.getElementById('deliveryPrice').value,
-                driver: document.getElementById('driverNum').value,
-                driverT: document.getElementById('driverTime').value,
-                cakeP: document.getElementById('cakePrice').value,
-                details: document.getElementById('cakeDetails').value,
-                extDet: document.getElementById('extraDetails').value,
-                extPrice: document.getElementById('extraPrice').value,
-                notes: document.getElementById('notes').value
-            };
-
-            const jsonString = JSON.stringify(data);
-            const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
-            const shareableUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
-
-            navigator.clipboard.writeText(shareableUrl).then(() => {
-                alert("تم توليد الرابط الأنيق للفاتورة ونسخه بنجاح! أرسله للعميل الآن عبر الواتساب.");
-            }).catch(() => {
-                prompt("انسخ الرابط من هنا:", shareableUrl);
-            });
-        }
-
-        // قراءة الروابط وحالة العرض للعميل
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('invoice')) {
