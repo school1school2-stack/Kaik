@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة طلبات الكيك الفاخر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #060409 100%);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-gold: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 100%);
+            --text-gold: #d4af37;
+            --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --btn-success: linear-gradient(135deg, #11998e, #38ef7d);
+            --btn-secondary: linear-gradient(135deg, #4568dc, #b06ab3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .invoice-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 750px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invoice-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gold);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--accent-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: var(--text-gold);
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            color: var(--text-gold);
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            border-color: #bf953f;
+            box-shadow: 0 0 10px rgba(191, 149, 63, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* تفاصيل الطلب بمساحة كبيرة */
+        .textarea-large {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* حقول التوصيل الديناميكية */
+        #delivery-fields {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* عرض المجموع النهائي الفخم */
+        .total-display-box {
+            background: rgba(191, 149, 63, 0.08);
+            border: 1px dashed #bf953f;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 30px;
+        }
+
+        .total-display-box span {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .total-display-box h2 {
+            font-size: 32px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .total-display-box h2 span {
+            display: inline;
+            color: var(--text-gold);
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        /* أزرار التحكم والخيارات */
+        .actions-wrapper {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        @media (max-width: 480px) {
+            .actions-wrapper { flex-direction: column; }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .btn-image { background: var(--btn-secondary); }
+        .btn-pdf { background: var(--btn-success); }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invoice-container" id="invoiceBlock">
+        <header>
+            <h1><i class="fa-solid sha-cake-candles"></i> متجر الكيك الفاخر</h1>
+            <p>طلب جديد / فاتورة العميل الرقمية</p>
+        </header>
+
+        <div class="section-title">
+            <i class="fa-solid fa-user-tag"></i> بيانات العميل والوقت
+        </div>
+        <div class="grid-2">
+            <div class="input-group">
+                <label>اسم العميل</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" placeholder="أدخل اسم العميل ثلاثي">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>رقم الجوال</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" placeholder="05xxxxxxxx" style="text-align: left; direction: ltr; padding-right: 15px; padding-left: 45px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="input-group">
+                <label>وقت الطلب</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    <input type="datetime-local">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>وقت التسليم</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <input type="datetime-local">
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fa-solid fa-truck"></i> آلية التسليم
+        </div>
+        <div class="input-group">
+            <label>نوع التسليم</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-boxes-sharing"></i>
+                <select id="deliveryType" onchange="toggleDeliveryFields()">
+                    <option value="pickup">🏠 استلام من المتجر</option>
+                    <option value="delivery">🚗 توصيل مع مندوب</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="delivery-fields">
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>سعر التوصيل</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <input type="number" id="deliveryPrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>رقم المندوب</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" placeholder="اسم أو رقم المندوب">
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>توقيت خروج المندوب</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-clock"></i>
+                    <input type="time">
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك
+        </div>
+        <div class="input-group">
+            <label>تفاصيل الطلب (الحجم، النكهة، الحشوة، الكتابة الفنية)</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-paragraph" style="top: 15px;"></i>
+                <textarea class="textarea-large" placeholder="اكتب تفاصيل الكيكة هنا بدقة ومساحة واسعة..."></textarea>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="input-group">
+                <label>الإضافات (الشموع، قاعدة خشبية، بالونات...الخ)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-ice-cream"></i>
+                    <input type="text" placeholder="مثال: طقم شموع + تغليف خاص">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>سعر الإضافات</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-coins"></i>
+                    <input type="number" id="extraPrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>الملاحظات الخاصة</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-comment-dots"></i>
+                <input type="text" placeholder="أي ملاحظات إضافية أو تنويهات حساسية">
+            </div>
+        </div>
+
+        <div class="total-display-box">
+            <span>إجمالي حساب الطلب المستحق</span>
+            <h2 id="totalAmount">0.00 <span>ريال</span></h2>
+        </div>
+
+        <div class="actions-wrapper" data-html2canvas-ignore="true">
+            <button class="btn btn-image" onclick="saveAsImage()">
+                <i class="fa-solid fa-file-image"></i> حفظ كصورة PNG
+            </button>
+            <button class="btn btn-pdf" onclick="saveAsPDF()">
+                <i class="fa-solid fa-file-pdf"></i> حفظ كملف PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // دالة إظهار وإخفاء حقول المندوب بناءً على خيار التوصيل
+        function toggleDeliveryFields() {
+            const type = document.getElementById('deliveryType').value;
+            const deliveryFields = document.getElementById('delivery-fields');
+            const deliveryPriceInput = document.getElementById('deliveryPrice');
+
+            if (type === 'delivery') {
+                deliveryFields.style.display = 'block';
+            } else {
+                deliveryFields.style.display = 'none';
+                deliveryPriceInput.value = 0; // تصفير القيمة عند اختيار استلام
+                calculateTotal();
+            }
+        }
+
+        // دالة الحساب التلقائي للمجموع
+        function calculateTotal() {
+            const deliveryPrice = parseFloat(document.getElementById('deliveryPrice').value) || 0;
+            const extraPrice = parseFloat(document.getElementById('extraPrice').value) || 0;
+            
+            const total = deliveryPrice + extraPrice;
+            document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span>ريال</span>';
+        }
+
+        // ميزة حفظ البيانات كصورة رقمية فاخرة بجودة عالية لإرسالها للعميل
+        function saveAsImage() {
+            const container = document.getElementById('invoiceBlock');
+            
+            html2canvas(container, {
+                scale: 2, // رفع دقة الصورة لتكون واضحة وفخمة عند الإرسال بالواتساب
+                backgroundColor: '#0f0c20',
+                borderRadius: 24
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `طلب_كيك_${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        // ميزة حفظ البيانات كـ PDF
+        function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const container = document.getElementById('invoiceBlock');
+
+            html2canvas(container, { scale: 2, backgroundColor: '#0f0c20' }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210; // عرض A4 بالـ mm
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save(`طلب_كيك_${Date.now()}.pdf`);
+            });
+        }
+    </script>
+</body>
+</html>
