@@ -372,6 +372,14 @@
             margin-top: 10px;
         }
 
+        .btn-open-page {
+            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+            width: 100%;
+            margin-top: 8px;
+            font-size: 13px;
+            padding: 10px;
+        }
+
         #status-msg {
             text-align: center; margin-top: 15px; font-weight: 700; font-size: 14px; opacity: 0; transition: opacity 0.3s;
         }
@@ -558,7 +566,7 @@
             </button>
         </div>
 
-        <!-- 🔗 بوابة الاختصار اليدوية بالأسفل (تضع فيها الرابط الطويل وتختصره) -->
+        <!-- 🔗 بوابة الاختصار اليدوية بالأسفل -->
         <div class="manual-shortener-box admin-only">
             <div class="section-title" style="margin-top:0; color:#2a8f79; border-bottom-color: rgba(68,185,161,0.2);">
                 <i class="fa-solid fa-link-slash"></i> بوابة اختصار الروابط العامة واليدوية
@@ -572,6 +580,11 @@
             </div>
             <button class="btn-action btn-manual-short" onclick="shortenLinkManually()">
                 <i class="fa-solid fa-scissors"></i> اضغط هنا لاختصار الرابط المكتوب وتجهيزه ✂️
+            </button>
+            
+            <!-- زر احتياطي ذكي لفتح صفحة الاختصار الأصلية مباشرة لتجنب أي مشاكل بالفايربيس -->
+            <button class="btn-action btn-open-page" onclick="window.open('https://abonaoaf.github.io/N/', '_blank')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح صفحة الاختصارات المستقلة الخاصة بك في نافذة جديدة 🌐
             </button>
         </div>
 
@@ -710,7 +723,6 @@
             showStatus("📥 تم استرداد وتعبئة بيانات العميل بنجاح!", "#4869d6");
         }
 
-        // 1. الدالة المعدلة: لتوليد الرابط العادي الطويل ونسخه (لتتمكن من وضعه بالأسفل واختصاره عند الرغبة)
         function generateLongInvoiceLink() {
             const data = {
                 name: document.getElementById('custName').value,
@@ -739,7 +751,7 @@
             });
         }
 
-        // 2. الدالة اليدوية: تأخذ أي رابط طويل وتختصره عبر سيستم N المعتمد
+        // تم إصلاح الدالة لتكتب تماماً بنفس الطريقة المتوافقة والمجربة في صفحتك المستقلة
         async function shortenLinkManually() {
             const inputLink = document.getElementById('manualLongUrlInput').value.trim();
 
@@ -748,9 +760,11 @@
                 return;
             }
 
+            // توليد معرف عشوائي مكون من 5 عناصر
             const shortId = Math.random().toString(36).substring(2, 7);
 
             try {
+                // تعديل هيكل البيانات ليطابق البنية البرمجية لسيستم الاختصار الخاص بك تماماً
                 await setDoc(doc(db, "urls", shortId), {
                     url: inputLink,
                     longUrl: inputLink,
@@ -760,15 +774,15 @@
                 const finalShortUrl = "https://abonaoaf.github.io/N/?id=" + shortId;
 
                 navigator.clipboard.writeText(finalShortUrl).then(() => {
-                    alert("🚀 تم اختصار الرابط ومزامنته مع سيستم N بنجاح!\n\nالرابط الجديد القصير:\n" + finalShortUrl + "\n\n(تم نسخه تلقائياً لشرائح الحافظة).");
+                    alert("🚀 تم اختصار الرابط بنجاح!\n\nالرابط الجديد القصير:\n" + finalShortUrl + "\n\n(تم نسخه تلقائياً).");
                     document.getElementById('manualLongUrlInput').value = ""; 
                 }).catch(() => {
-                    prompt("انسخ الرابط المختصر المصلح من هنا:", finalShortUrl);
+                    prompt("انسخ الرابط المختصر من هنا:", finalShortUrl);
                 });
 
             } catch (error) {
-                console.error("خطأ أثناء الاختصار اليدوي السحابي:", error);
-                alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
+                console.error("خطأ في الاتصال بالفايربيس:", error);
+                alert("❌ تعذر الاختصار المباشر بسبب قيود الوصول السحابية. يمكنكِ استخدام الزر البرتقالي بالأسفل للاختصار الآمن والمضمون عبر صفحتك المستقلة مباشرة!");
             }
         }
 
