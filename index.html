@@ -249,7 +249,7 @@
 
     <div class="invoice-container" id="invoiceBlock">
         <header>
-            <h1><i class="fa-solid sha-cake-candles"></i> متجر الكيك الفاخر</h1>
+            <h1><i class="fa-solid fa-cake-candles"></i> متجر الكيك الفاخر</h1>
             <p>طلب جديد / فاتورة العميل الرقمية</p>
         </header>
 
@@ -296,7 +296,7 @@
         <div class="input-group">
             <label>نوع التسليم</label>
             <div class="input-wrapper">
-                <i class="fa-solid fa-boxes-sharing"></i>
+                <i class="fa-solid fa-boxes-packing"></i>
                 <select id="deliveryType" onchange="toggleDeliveryFields()">
                     <option value="pickup">🏠 استلام من المتجر</option>
                     <option value="delivery">🚗 توصيل مع مندوب</option>
@@ -333,6 +333,16 @@
         <div class="section-title">
             <i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك
         </div>
+        <div class="grid-2">
+            <div class="input-group" style="grid-column: span 1;">
+                <label>سعر الكيكة الأساسي</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-money-bill-check"></i>
+                    <input type="number" id="cakePrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+        
         <div class="input-group">
             <label>تفاصيل الطلب (الحجم، النكهة، الحشوة، الكتابة الفنية)</label>
             <div class="input-wrapper">
@@ -397,12 +407,14 @@
             }
         }
 
-        // دالة الحساب التلقائي للمجموع
+        // دالة الحساب التلقائي المحدثة للمجموع الشامل
         function calculateTotal() {
+            const cakePrice = parseFloat(document.getElementById('cakePrice').value) || 0;
             const deliveryPrice = parseFloat(document.getElementById('deliveryPrice').value) || 0;
             const extraPrice = parseFloat(document.getElementById('extraPrice').value) || 0;
             
-            const total = deliveryPrice + extraPrice;
+            // حساب السعر الكلي (الكيكة + التوصيل + الإضافات)
+            const total = cakePrice + deliveryPrice + extraPrice;
             document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span>ريال</span>';
         }
 
@@ -431,7 +443,6 @@
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const imgWidth = 210; // عرض A4 بالـ mm
-                const pageHeight = 295;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
                 pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
