@@ -3,94 +3,525 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب الكيك الرقمي</title>
+    <title>نظام إدارة طلبات الكيك الفاخر</title>
+    <!-- خطوط جوجل وفونت أوسم للأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #060409 100%);
             --card-bg: rgba(255, 255, 255, 0.03);
             --card-border: rgba(255, 255, 255, 0.08);
+            --accent-gold: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 100%);
             --text-gold: #d4af37;
             --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
             --input-bg: rgba(255, 255, 255, 0.05);
+            --btn-gold: linear-gradient(135deg, #bf953f 0%, #d4af37 100%);
         }
-        body { background: var(--bg-gradient); color: var(--text-light); font-family: 'Cairo', sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .invoice-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; width: 100%; max-width: 750px; padding: 35px; }
-        .input-group { margin-bottom: 15px; }
-        .input-wrapper { position: relative; display: flex; align-items: center; }
-        .input-wrapper i { position: absolute; right: 15px; color: var(--text-gold); }
-        input, textarea, select { width: 100%; padding: 12px 45px; background: var(--input-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; outline: none; }
-        .total-box { text-align: center; padding: 20px; border: 1px dashed var(--text-gold); border-radius: 14px; margin-top: 20px; }
-        .btn-share { width: 100%; padding: 15px; background: #d4af37; border: none; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        [readonly] { opacity: 0.7; cursor: not-allowed; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .invoice-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 750px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invoice-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gold);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--accent-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: var(--text-gold);
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            color: var(--text-gold);
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            border-color: #bf953f;
+            box-shadow: 0 0 10px rgba(191, 149, 63, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* تفاصيل الطلب بمساحة كبيرة */
+        .textarea-large {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* حقول التوصيل الديناميكية */
+        #delivery-fields {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تفاصيل حساب الفاتورة الفخم */
+        .invoice-bill-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .bill-row.total-row {
+            border-bottom: none;
+            padding-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .bill-row.total-row .price-val {
+            color: var(--text-gold);
+            font-size: 24px;
+        }
+
+        .price-val span {
+            font-size: 13px;
+            margin-right: 3px;
+            font-weight: normal;
+        }
+
+        /* أزرار التحكم والخيارات */
+        .actions-wrapper {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            background: var(--btn-gold);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(191, 149, 63, 0.3);
+            filter: brightness(1.1);
+        }
+
+        /* وضع العرض فقط للعميل */
+        body.view-only input, body.view-only textarea, body.view-only select {
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: #d1d5db;
+        }
+        body.view-only .actions-wrapper {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<div class="invoice-container" id="formContainer">
-    <h2 style="text-align:center; color: var(--text-gold);">تفاصيل الطلب</h2>
-    
-    <div id="fieldsContainer">
-        <!-- الحقول -->
-        <div class="input-group"><input type="text" id="custName" placeholder="اسم العميل"></div>
-        <div class="input-group"><input type="text" id="custPhone" placeholder="رقم الجوال"></div>
-        <div class="input-group"><input type="number" id="cakePrice" placeholder="سعر الكيكة" oninput="calc()"></div>
-        <div class="input-group"><textarea id="details" placeholder="تفاصيل الطلب" rows="4"></textarea></div>
-        <div class="input-group"><input type="number" id="extraPrice" placeholder="سعر الإضافات" oninput="calc()"></div>
-        <div class="input-group"><input type="number" id="deliveryPrice" placeholder="سعر التوصيل" oninput="calc()"></div>
-    </div>
+    <div class="invoice-container" id="invoiceBlock">
+        <header>
+            <h1><i class="fa-solid fa-cake-candles"></i> متجر الكيك الفاخر</h1>
+            <p id="pageSubtitle">طلب جديد / فاتورة العميل الرقمية</p>
+        </header>
 
-    <div class="total-box">
-        الإجمالي: <span id="totalDisplay">0</span> ريال
-    </div>
+        <!-- القسم الأول: بيانات العميل والوقت -->
+        <div class="section-title">
+            <i class="fa-solid fa-user-tag"></i> بيانات العميل والوقت
+        </div>
+        <div class="grid-2">
+            <div class="input-group">
+                <label>اسم العميل</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="custName" placeholder="أدخل اسم العميل ثلاثي">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>رقم الجوال</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="custPhone" placeholder="05xxxxxxxx" style="text-align: left; direction: ltr; padding-right: 15px; padding-left: 45px;">
+                </div>
+            </div>
+        </div>
 
-    <button class="btn-share" onclick="generateShareableLink()">توليد رابط عرض للعميل</button>
-</div>
+        <div class="grid-2">
+            <div class="input-group">
+                <label>وقت الطلب</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    <input type="datetime-local" id="orderTime">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>وقت التسليم</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <input type="datetime-local" id="deliveryTime">
+                </div>
+            </div>
+        </div>
 
-<script>
-    function calc() {
-        let total = (parseFloat(document.getElementById('cakePrice').value) || 0) +
-                    (parseFloat(document.getElementById('extraPrice').value) || 0) +
-                    (parseFloat(document.getElementById('deliveryPrice').value) || 0);
-        document.getElementById('totalDisplay').innerText = total;
-    }
+        <!-- القسم الثاني: آلية التسليم -->
+        <div class="section-title">
+            <i class="fa-solid fa-truck"></i> آلية التسليم
+        </div>
+        <div class="input-group">
+            <label>نوع التسليم</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-boxes-packing"></i>
+                <select id="deliveryType" onchange="toggleDeliveryFields()">
+                    <option value="pickup">🏠 استلام من المتجر</option>
+                    <option value="delivery">🚗 توصيل مع مندوب</option>
+                </select>
+            </div>
+        </div>
 
-    function generateShareableLink() {
-        const data = {
-            n: document.getElementById('custName').value,
-            p: document.getElementById('custPhone').value,
-            cp: document.getElementById('cakePrice').value,
-            dt: document.getElementById('details').value,
-            ep: document.getElementById('extraPrice').value,
-            dp: document.getElementById('deliveryPrice').value,
-            t: document.getElementById('totalDisplay').innerText
-        };
+        <!-- حقول التوصيل والمندوب كامله -->
+        <div id="delivery-fields">
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>سعر التوصيل</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <input type="number" id="deliveryPrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>رقم المندوب</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" id="driverNum" placeholder="اسم أو رقم المندوب">
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>توقيت خروج المندوب</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-clock"></i>
+                    <input type="time" id="driverTime">
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم الثالث: تفاصيل ومواصفات الكيك -->
+        <div class="section-title">
+            <i class="fa-solid fa-cake-candles"></i> مواصفات وتفاصيل طلب الكيك
+        </div>
         
-        // تحويل البيانات إلى نص مشفر بسيط
-        const encoded = btoa(JSON.stringify(data));
-        const url = window.location.origin + window.location.pathname + "?data=" + encoded;
-        prompt("انسخ هذا الرابط وأرسله للعميل:", url);
-    }
+        <div class="grid-2">
+            <div class="input-group" style="grid-column: span 2;">
+                <label>سعر الكيكة الأساسي</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-money-bill-check"></i>
+                    <input type="number" id="cakePrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>تفاصيل الطلب (الحجم، النكهة، الحشوة، الكتابة الفنية)</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-paragraph" style="top: 15px;"></i>
+                <textarea id="cakeDetails" class="textarea-large" placeholder="اكتب تفاصيل الكيكة هنا بدقة ومساحة واسعة..."></textarea>
+            </div>
+        </div>
 
-    // عند فتح الرابط، تحويل الحقول لـ للقراءة فقط (Read-only)
-    window.onload = function() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('data')) {
-            const data = JSON.parse(atob(params.get('data')));
-            document.getElementById('custName').value = data.n;
-            document.getElementById('custPhone').value = data.p;
-            document.getElementById('cakePrice').value = data.cp;
-            document.getElementById('details').value = data.dt;
-            document.getElementById('extraPrice').value = data.ep;
-            document.getElementById('deliveryPrice').value = data.dp;
-            document.getElementById('totalDisplay').innerText = data.t;
-            
-            // جعل كل شيء للقراءة فقط
-            document.querySelectorAll('input, textarea').forEach(el => el.readOnly = true);
-            document.querySelector('.btn-share').style.display = 'none';
+        <div class="grid-2">
+            <div class="input-group">
+                <label>الإضافات (الشموع، قاعدة خشبية، بالونات...الخ)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-ice-cream"></i>
+                    <input type="text" id="extraDetails" placeholder="مثال: طقم شموع + تغليف خاص">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>سعر الإضافات</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-coins"></i>
+                    <input type="number" id="extraPrice" value="0" min="0" oninput="calculateTotal()" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>الملاحظات الخاصة</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-comment-dots"></i>
+                <input type="text" id="notes" placeholder="أي ملاحظات إضافية أو تنويهات حساسية">
+            </div>
+        </div>
+
+        <!-- تفاصيل الفاتورة بالتفصيل المطلوب -->
+        <div class="invoice-bill-box">
+            <div class="bill-row">
+                <span>سعر الطلب (الكيك الأساسي):</span>
+                <span class="price-val" id="billCakePrice">0.00 <span>ريال</span></span>
+            </div>
+            <div class="bill-row">
+                <span>سعر الإضافات:</span>
+                <span class="price-val" id="billExtraPrice">0.00 <span>ريال</span></span>
+            </div>
+            <div class="bill-row">
+                <span>سعر التوصيل:</span>
+                <span class="price-val" id="billDeliveryPrice">0.00 <span>ريال</span></span>
+            </div>
+            <div class="bill-row total-row">
+                <span>المجموع الكلي:</span>
+                <span class="price-val" id="billTotalAmount">0.00 <span>ريال</span></span>
+            </div>
+        </div>
+
+        <!-- زر توليد الرابط (يختفي عند العميل) -->
+        <div class="actions-wrapper">
+            <button class="btn" onclick="generateShareableLink()">
+                <i class="fa-solid fa-share-nodes"></i> توليد رابط الفاتورة الرقمية للعميل
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleDeliveryFields() {
+            const type = document.getElementById('deliveryType').value;
+            const deliveryFields = document.getElementById('delivery-fields');
+            const deliveryPriceInput = document.getElementById('deliveryPrice');
+
+            if (type === 'delivery') {
+                deliveryFields.style.display = 'block';
+            } else {
+                deliveryFields.style.display = 'none';
+                deliveryPriceInput.value = 0;
+                calculateTotal();
+            }
         }
-    }
-</script>
+
+        function calculateTotal() {
+            const cakePrice = parseFloat(document.getElementById('cakePrice').value) || 0;
+            const extraPrice = parseFloat(document.getElementById('extraPrice').value) || 0;
+            const deliveryPrice = parseFloat(document.getElementById('deliveryPrice').value) || 0;
+            
+            const total = cakePrice + extraPrice + deliveryPrice;
+
+            // تحديث الفاتورة بالتفصيل
+            document.getElementById('billCakePrice').innerHTML = cakePrice.toFixed(2) + ' <span>ريال</span>';
+            document.getElementById('billExtraPrice').innerHTML = extraPrice.toFixed(2) + ' <span>ريال</span>';
+            document.getElementById('billDeliveryPrice').innerHTML = deliveryPrice.toFixed(2) + ' <span>ريال</span>';
+            document.getElementById('billTotalAmount').innerHTML = total.toFixed(2) + ' <span>ريال</span>';
+        }
+
+        // توليد الرابط المشفر للعميل لعرض الفاتورة فقط دون تعديل
+        function generateShareableLink() {
+            const data = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                oTime: document.getElementById('orderTime').value,
+                dTime: document.getElementById('deliveryTime').value,
+                delType: document.getElementById('deliveryType').value,
+                delPrice: document.getElementById('deliveryPrice').value,
+                driver: document.getElementById('driverNum').value,
+                driverT: document.getElementById('driverTime').value,
+                cakeP: document.getElementById('cakePrice').value,
+                details: document.getElementById('cakeDetails').value,
+                extDet: document.getElementById('extraDetails').value,
+                extPrice: document.getElementById('extraPrice').value,
+                notes: document.getElementById('notes').value
+            };
+
+            // تشفير البيانات وتحويلها لمعايير الرابط (Safe Base64)
+            const jsonString = JSON.stringify(data);
+            const encodedData = btoa(unescape(encodeURIComponent(jsonString)));
+            const shareableUrl = window.location.origin + window.location.pathname + "?invoice=" + encodedData;
+
+            // نسخ الرابط تلقائياً وتنبيه المستخدم
+            navigator.clipboard.writeText(shareableUrl).then(() => {
+                alert("تم توليد رابط الفاتورة ونسخه بنجاح! يمكنك الآن إرساله للعميل عبر الواتساب.");
+            }).catch(() => {
+                prompt("نسخ الرابط الفاخر للعميل متاح هنا:", shareableUrl);
+            });
+        }
+
+        // قراءة الرابط عند الفتح والتحقق من نوع المستخدم (أنت أم العميل)
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('invoice')) {
+                try {
+                    const encodedData = urlParams.get('invoice');
+                    const decodedString = decodeURIComponent(escape(atob(encodedData)));
+                    const data = JSON.parse(decodedString);
+
+                    // تعبئة البيانات في الحقول للعميل
+                    document.getElementById('custName').value = data.name;
+                    document.getElementById('custPhone').value = data.phone;
+                    document.getElementById('orderTime').value = data.oTime;
+                    document.getElementById('deliveryTime').value = data.dTime;
+                    document.getElementById('deliveryType').value = data.delType;
+                    document.getElementById('deliveryPrice').value = data.delPrice;
+                    document.getElementById('driverNum').value = data.driver;
+                    document.getElementById('driverTime').value = data.driverT;
+                    document.getElementById('cakePrice').value = data.cakeP;
+                    document.getElementById('cakeDetails').value = data.details;
+                    document.getElementById('extraDetails').value = data.extDet;
+                    document.getElementById('extraPrice').value = data.extPrice;
+                    document.getElementById('notes').value = data.notes;
+
+                    // معالجة ظهور واختفاء حقول المندوب بناءً على البيانات المستلمة
+                    if(data.delType === 'delivery') {
+                        document.getElementById('delivery-fields').style.display = 'block';
+                    }
+
+                    // حساب الفاتورة الإجمالية بالتفصيل
+                    calculateTotal();
+
+                    // قفل التعديل وتحويل الصفحة لوضع "العرض فقط" للعميل
+                    document.body.classList.add('view-only');
+                    document.getElementById('pageSubtitle').innerText = "الفاتورة الرقمية الرسمية للطلب";
+                    
+                    // تعطيل المدخلات بالكامل للقراءة فقط
+                    document.querySelectorAll('input, textarea, select').forEach(el => {
+                        el.readOnly = true;
+                        el.disabled = true;
+                    });
+
+                } catch (e) {
+                    console.error("خطأ في قراءة بيانات الفاتورة الرقمية", e);
+                }
+            }
+        }
+    </script>
 </body>
 </html>
